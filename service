@@ -1,0 +1,8 @@
+#!/bin/bash -x
+
+SERVICES_LOCATION=/usr/local/etc/services.d
+
+SERVICE=$1
+ACTION=$2
+
+$SERVICES_LOCATION/$SERVICE $ACTION
