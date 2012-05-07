@@ -1,0 +1,46 @@
+#!/bin/bash
+
+# postgresqld - Ass't for starting Homebrew-based postgresqld
+
+start()
+{
+  echo -n $"Starting postgresqld: "
+  launchctl load -w ~/Library/LaunchAgents/homebrew.mxcl.postgresql.plist
+  RETVAL=$?
+  echo
+}
+
+stop()
+{
+  echo -n $"Stopping postgresqld: "
+  launchctl unload -w ~/Library/LaunchAgents/homebrew.mxcl.postgresql.plist
+  RETVAL=$?
+  echo
+}
+
+restart () {
+	stop
+	start
+}
+
+RETVAL=0
+
+case "$1" in
+  start)
+    start
+    ;;
+  stop)
+    stop
+    ;;
+  restart|reload|force-reload)
+    restart
+    ;;
+  condrestart)
+    [ -f /var/lock/subsys/postgresqld ] && restart || :
+    ;;
+  *)
+    echo "Usage: $0 {start|stop|restart|reload|force-reload|condrestart}"
+    RETVAL=1
+esac
+
+exit $RETVAL
