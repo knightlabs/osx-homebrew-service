@@ -1,0 +1,133 @@
+#!/bin/bash
+
+# oracled - Ass't for starting RHEL-based Oracle VM
+
+if [ -z $ORACLE_VM ]; 
+then
+  export ORACLE_VM=rh6x64-vm001
+fi
+
+RETVAL=0
+
+start()
+{
+  echo -n $"Starting oracled: "
+  STATE=`VBoxManage showvminfo $ORACLE_VM | grep State`
+  
+  if [[ $STATE =~ "paused" ]]; then
+    VBoxManage controlvm $ORACLE_VM resume
+    if [ $? = 0 ]; then
+     echo -n $"OK"
+    else
+     echo -n $"Failed" 
+    fi
+  elif [[ $STATE =~ "powered off" ]]; then
+    VBoxManage startvm $ORACLE_VM --type headless
+    if [ $? = 0 ]; then
+     echo -n $"OK"
+    else
+     echo -n $"Failed" 
+    fi
+  elif [[ $STATE =~ "running" ]]; then
+    echo "  [WARN] $ORACLE_VM is already running ..."
+  else
+    echo "  [ERR] An unknown issue occurred starting $ORACLE_VM."
+  fi
+
+  RETVAL=$?
+  echo
+}
+
+pause()
+{
+  echo -n $"Pausing oracled: "
+  STATE=`VBoxManage showvminfo $ORACLE_VM | grep State`
+  
+  if [[ $STATE =~ "paused" ]]; then
+    echo "  [WARN] $ORACLE_VM is already paused ..."
+  elif [[ $STATE =~ "powered off" ]]; then
+    echo "  [WARN] $ORACLE_VM is not running ..."
+  elif [[ $STATE =~ "running" ]]; then
+    VBoxManage controlvm $ORACLE_VM pause
+    if [ $? = 0 ]; then
+     echo -n $"OK"
+    else
+     echo -n $"Failed" 
+    fi
+  else
+    echo "  [ERR] An unknown issue occurred pausing $ORACLE_VM."
+  fi
+  
+  RETVAL=$?
+  echo
+}
+
+# TODO: this is really a terrible thing to do
+force-stop()
+{
+  echo -n $"Force stopping oracled: "
+  STATE=`VBoxManage showvminfo $ORACLE_VM | grep State`
+  
+  if [[ $STATE =~ "paused" ]]; then
+    VBoxManage controlvm $ORACLE_VM poweroff
+    if [ $? = 0 ]; then
+     echo -n $"OK"
+    else
+     echo -n $"Failed" 
+    fi
+  elif [[ $STATE =~ "powered off" ]]; then
+    echo "  [WARN] $ORACLE_VM is not running ..."
+  elif [[ $STATE =~ "running" ]]; then
+    VBoxManage controlvm $ORACLE_VM poweroff
+    if [ $? = 0 ]; then
+     echo -n $"OK"
+    else
+     echo -n $"Failed" 
+    fi
+  else
+    echo "  [ERR] An unknown issue occurred force-stopping $ORACLE_VM."
+  fi
+  
+  RETVAL=$?
+  echo
+}
+
+# TODO: some sort of graceful stop involving SSH
+
+status()
+{
+  STATE=`VBoxManage showvminfo $ORACLE_VM | grep State`
+
+  if [[ $STATE =~ "paused" ]]; then
+    echo "  [INFO] $ORACLE_VM is paused ..."
+  elif [[ $STATE =~ "powered off" ]]; then
+    echo "  [INFO] $ORACLE_VM is not running ..."
+  elif [[ $STATE =~ "running" ]]; then
+    echo "  [INFO] $ORACLE_VM is running ..."
+  else
+    echo "  [ERR] An unknown issue occurred getting status on $ORACLE_VM."
+  fi
+
+  RETVAL=$?
+  echo
+}
+
+case "$1" in
+  start|resume)
+    start
+    ;;
+  pause)
+    pause
+    ;;
+  force-stop)
+    force-stop
+    ;;
+  status)
+    status
+    ;;
+  *)
+    echo "Usage: $0 {start|pause|force-stop|status}"
+    RETVAL=1
+esac
+
+exit $RETVAL
