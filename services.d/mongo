@@ -1,19 +1,19 @@
 #!/bin/bash
 
-# postgresqld - Ass't for starting Homebrew-based postgresqld
+# mongo - Ass't for starting Homebrew-based mongo
 
 start()
 {
-  echo -n $"Starting postgresqld: "
-  launchctl load -w ~/Library/LaunchAgents/homebrew.mxcl.postgresql.plist
+  echo -n $"Starting mongo: "
+  launchctl load -w ~/Library/LaunchAgents/homebrew.mxcl.mongodb.plist
   RETVAL=$?
   echo
 }
 
 stop()
 {
-  echo -n $"Stopping postgresqld: "
-  launchctl unload -w ~/Library/LaunchAgents/homebrew.mxcl.postgresql.plist
+  echo -n $"Stopping mongo: "
+  launchctl unload -w ~/Library/LaunchAgents/homebrew.mxcl.mongodb.plist
   RETVAL=$?
   echo
 }
@@ -36,7 +36,7 @@ case "$1" in
     restart
     ;;
   condrestart)
-    [ -f /var/lock/subsys/postgresqld ] && restart || :
+    [ -f /var/lock/subsys/mongo ] && restart || :
     ;;
   *)
     echo "Usage: $0 {start|stop|restart|reload|force-reload|condrestart}"

@@ -1,19 +1,19 @@
 #!/bin/bash
 
-# mongod - Ass't for starting Homebrew-based mongod
+# postgresql - Ass't for starting Homebrew-based postgresql
 
 start()
 {
-  echo -n $"Starting mongod: "
-  launchctl load -w ~/Library/LaunchAgents/homebrew.mxcl.mongodb.plist
+  echo -n $"Starting postgresql: "
+  launchctl load -w ~/Library/LaunchAgents/homebrew.mxcl.postgresql.plist
   RETVAL=$?
   echo
 }
 
 stop()
 {
-  echo -n $"Stopping mongod: "
-  launchctl unload -w ~/Library/LaunchAgents/homebrew.mxcl.mongodb.plist
+  echo -n $"Stopping postgresql: "
+  launchctl unload -w ~/Library/LaunchAgents/homebrew.mxcl.postgresql.plist
   RETVAL=$?
   echo
 }
@@ -36,7 +36,7 @@ case "$1" in
     restart
     ;;
   condrestart)
-    [ -f /var/lock/subsys/mongod ] && restart || :
+    [ -f /var/lock/subsys/postgresql ] && restart || :
     ;;
   *)
     echo "Usage: $0 {start|stop|restart|reload|force-reload|condrestart}"

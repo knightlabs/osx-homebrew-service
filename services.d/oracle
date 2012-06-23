@@ -4,14 +4,14 @@
 
 if [ -z $ORACLE_VM ]; 
 then
-  export ORACLE_VM=rh6x64-vm001
+  export ORACLE_VM=rh6x64-vm000
 fi
 
 RETVAL=0
 
 start()
 {
-  echo -n $"Starting oracled: "
+  echo -n $"Starting oracle: "
   STATE=`VBoxManage showvminfo $ORACLE_VM | grep State`
   
   if [[ $STATE =~ "paused" ]]; then
@@ -40,7 +40,7 @@ start()
 
 pause()
 {
-  echo -n $"Pausing oracled: "
+  echo -n $"Pausing oracle: "
   STATE=`VBoxManage showvminfo $ORACLE_VM | grep State`
   
   if [[ $STATE =~ "paused" ]]; then
@@ -65,7 +65,7 @@ pause()
 # TODO: this is really a terrible thing to do
 force-stop()
 {
-  echo -n $"Force stopping oracled: "
+  echo -n $"Force stopping oracle: "
   STATE=`VBoxManage showvminfo $ORACLE_VM | grep State`
   
   if [[ $STATE =~ "paused" ]]; then
