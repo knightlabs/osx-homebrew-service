@@ -1,0 +1,44 @@
+#!/bin/bash
+
+# learn - Ass't for starting P4-based Learn mainline
+
+start()
+{
+  echo -n $"Starting learn: "
+  /usr/local/blackboard/tools/admin/ServiceController.sh services.start
+  RETVAL=$?
+  echo
+}
+
+stop()
+{
+  echo -n $"Stopping learn: "
+  /usr/local/blackboard/tools/admin/ServiceController.sh services.stop
+  RETVAL=$?
+  echo
+}
+
+restart () 
+{
+  stop
+  start
+}
+
+RETVAL=0
+
+case "$1" in
+  start)
+    start
+    ;;
+  stop)
+    stop
+    ;;
+  restart|reload|force-reload)
+    restart
+    ;;
+  *)
+    echo "Usage: $0 {start|stop|restart|reload|force-reload}"
+    RETVAL=1
+esac
+
+exit $RETVAL
