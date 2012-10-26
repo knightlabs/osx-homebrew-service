@@ -11,4 +11,4 @@ if [ ! -d /usr/local/etc ]; then
   mkdir -p /usr/local/etc
 fi
 
-ln -nfs $DIR/service /usr/local/bin/service && ln -nfs $DIR/services.d $SERVICES_LOCATION
+cp $DIR/service /usr/local/bin/service && cp -R $DIR/services.d $SERVICES_LOCATION
