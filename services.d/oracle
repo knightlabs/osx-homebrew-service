@@ -21,7 +21,14 @@ start()
     else
      echo -n $"Failed" 
     fi
-  elif [[ $STATE =~ "powered off" ] -o [ $STATE =~ "aborted" ]]; then
+  elif [[ $STATE =~ "powered off" ]]; then
+    VBoxManage startvm $ORACLE_VM --type headless
+    if [ $? = 0 ]; then
+     echo -n $"OK"
+    else
+     echo -n $"Failed" 
+    fi
+  elif [[ $STATE =~ "aborted" ]]; then
     VBoxManage startvm $ORACLE_VM --type headless
     if [ $? = 0 ]; then
      echo -n $"OK"
